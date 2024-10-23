@@ -2,20 +2,29 @@
 
 pipeline {
     agent any
+    
+    tools {
+            jdk 'jdk17'
+            maven 'maven3'
+        }
+
     stages {
         stage('Build') {
             steps {
-                echo "Building..."
+                sh 'mvn clean install' 
             }
         }
-        stage('Test') {
+        
+        stage('Docker Build & Push'){
             steps {
-                echo "Testing..."
-            }
-        }
-        stage('Deploy'){
-            steps {
-                echo "Deploying..."
+                script {
+                    withDockerRegistry(credentialsId: 'dockercred', toolName: 'docker') {
+                        
+                        sh "docker build -t petclinic1 ."
+                        sh "docker tag petclinic1 siiyyko/my-petclinic:latest "
+                        sh "docker push siiyyko/my-petclinic:latest "
+                    }
+                }
             }
         }
     }
