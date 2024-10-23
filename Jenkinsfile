@@ -18,7 +18,7 @@ pipeline {
         stage('Docker Build & Push'){
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'dockercred', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'dockercreds', toolName: 'docker') {
                         
                         sh "docker build -t petclinic1 ."
                         sh "docker tag petclinic1 siiyyko/my-petclinic:latest "
